@@ -1,0 +1,80 @@
+{% macro regLoginForm(form) %}
+
+<form
+  method="POST"
+  action="{{form.action}}"
+  class="form"
+
+>
+  {{ form.csrf_token }} {{form.hidden_tag()}}
+  <div>{{form.username(class='form-control')}}</div>
+  <div>{{form.password(class="form-control")}}</div>
+  <div style="margin: 1rem;">
+    <input type="radio" name="isAdmin" id="isAdmin" value="Yes"> Admin Login? </input>
+    <input type="radio" name="isManager" id="isManager" value="Yes"> Manager Login? </input>
+  </div>
+  <div>{{form.submit(class='form-control btn-info')}}</div>
+</form>
+{% if form.errors%} {{form.errors}} {% endif %} {% endmacro %}
+
+
+{% macro ticketForm(form) %}
+<h6 style="color: rgb(86, 86, 86)">Raise a ticket</h6>
+<form
+  method="POST"
+  action="{{url_for('ticket.raise_ticket')}}"
+  class="form-inline"
+  
+
+>
+<div class="form-group">
+  {{ form.csrf_token }} 
+  <div>
+    {{form.ticketRequest(class="form-control")}}  
+    {{form.ticketTarget(class="form-control")}}
+    {{form.ticketDetails(class="form-control")}}
+    {{form.submit(class=" form-control btn-info")}}
+  </div>
+</div>
+</form>
+{% endmacro %}
+
+{% macro adminTicketView(ticket) %}
+<style>
+  h6{
+    color:rgb(86, 86, 86)
+  }
+
+</style>
+<div style="
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+  ">
+    <h6>{{ticket.ticketRequest}}</h6>
+    <h6>{{ticket.ticketTarget}}</h6>
+    <h6>{{ticket.ticketDetails}}</h6>
+    <h6>{{ticket.raisedBy}}</h6>
+    <form
+    method="POST"
+    action="{{url_for('ticket.handle_ticket',kwargs = {'ticketId' : ticket.ticketId,'approved':True})}}"
+  >
+  <input class = "btn btn-info" type="submit" name="Accept" value="Accept" id="response" />
+</form>
+<form
+    method="POST"
+    action="{{url_for('ticket.handle_ticket',kwargs = {'ticketId' : ticket.ticketId,'approved':False})}}"
+  >
+<input class = "btn btn-info"type="submit" name="Deny" value="Deny" id="response" />
+</form>
+</div>
+{% endmacro %}
+
+
+{% macro sectionCard(section) %}
+<div style="margin: 0.25rem 0.25rem;">
+    <a 
+    href='{{url_for("section.section_view",sectionCategory = section.sectionKey)}}' class="btn btn-light">{{section.sectionKey|capitalize}}</a>
+</div>
+{% endmacro %}
